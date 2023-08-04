@@ -1,0 +1,13 @@
+{
+    "scripts": {
+        "build": "tsc --project tsconfig.json",
+        "clean": "rm -Rf ./build",
+        "test": "ts-node node_modules/jasmine/bin/jasmine"
+    },
+    "devDependencies": {
+        "@types/jasmine": "^4.3.5",
+        "@types/node": "^20.4.6",
+        "jasmine": "^5.1.0",
+        "ts-node": "^10.9.1"
+    }
+}
