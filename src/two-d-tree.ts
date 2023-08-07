@@ -13,7 +13,7 @@ export default class TwoDTree {
 
     /**
      * Creates a new TwoDTree. 
-     * @param points Set of points to be added to the initial tree.
+     * @param points Set of points to be added to the initial tree. Duplicates are ignored.
      * @param distanceFunction Distance function to use when performing nearest-neighbor queries. If not provided, defaults to Euclidian Distance.
      */
     constructor(points: Point[], private distanceFunction: (p1: Point, p2: Point) => number = TwoDTree.EUCLIDIAN_DISTANCE) {
@@ -44,8 +44,7 @@ export default class TwoDTree {
 
     /**
      * Add a point to the 2-d Tree. The tree acts as a set and will ignore any duplicates added.
-     * @param point 
-     * @returns 
+     * @param point The point to be added. If the point already exists, a duplicate will NOT be added.
      */
     add(point: Point) {
         if(this.pointSet.has(point)) {
@@ -80,8 +79,7 @@ export default class TwoDTree {
 
     /**
      * Remove a point from the 2-d Tree.
-     * @param point 
-     * @returns 
+     * @param point The point to be removed.
      */
     remove(point: Point) {
         const [node, depth] = this.findNode(point);
@@ -116,9 +114,9 @@ export default class TwoDTree {
     /**
      * Perform an <strong>inclusive</strong> range search. All points contained by the orthogonal 2-dimensional range
      * specified by points p1 and p2 will be returned. This includes points that lie on the edges of the rectangle.
-     * @param min 
-     * @param max 
-     * @returns 
+     * @param p1 One corner of the rectangle being queried.
+     * @param p2 Another corner, opposite of <code>p1</code>, of the rectangle being queried.
+     * @returns All points inclusively bounded by the rectangle specified by <code>p1</code> and <code>p2</code>.
      */
     rangeSearch(p1: Point, p2: Point): Array<Point> {
         let discovered = new PointSet();
@@ -157,6 +155,19 @@ export default class TwoDTree {
         return results;
     }
 
+    /**
+     * Perform a nearest-neighbor search centered on point <code>p</code> and inclusively limited to radius
+     * <code>distance</code>. The distance function specified in the TwoDTree constructor is used to perform
+     * this search. You may, optionally, limit the results to the <i>x</x> closest results where <i>x</i> is
+     * specified by the <code>limit</code> parameter.
+     * @param p Center of the nearest-neighbor search.
+     * @param distance Radius of the nearest neighbor search. Ensure this is in the same units as those returned
+     *                 by the distance function provided to the TwoDTree constructor.
+     * @param limit (optional) The max number of results to be returned. For example, if set to <code>3</code>, the
+     *              3 closest results will be returned.
+     * @returns Either all nodes within <code>distance</code> of the center <code>p</code>, or the <code>limit</code>
+     *          closest nodes, if <code>limit</code> is provided.
+     */
     nearestNeighborsSearch(p: Point, distance: number, limit?: number): Array<Point> {
         const dSquared = distance * distance;
 
