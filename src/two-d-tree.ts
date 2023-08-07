@@ -9,7 +9,14 @@ export default class TwoDTree {
 
     private pointSet: PointSet;
 
-    constructor(points: Point[]) {
+    private static readonly EUCLIDIAN_DISTANCE = (p1: Point, p2: Point) => Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2);
+
+    /**
+     * Creates a new TwoDTree. 
+     * @param points Set of points to be added to the initial tree.
+     * @param distanceFunction Distance function to use when performing nearest-neighbor queries. If not provided, defaults to Euclidian Distance.
+     */
+    constructor(points: Point[], private distanceFunction: (p1: Point, p2: Point) => number = TwoDTree.EUCLIDIAN_DISTANCE) {
         this.root = this.buildStack(points, 0);
         this.pointSet = new PointSet(points);
     }
@@ -149,8 +156,6 @@ export default class TwoDTree {
 
         return results;
     }
-
-    private readonly distanceFunction = (p1: Point, p2: Point) => Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2);
 
     nearestNeighborsSearch(p: Point, distance: number, limit?: number): Array<Point> {
         const dSquared = distance * distance;
